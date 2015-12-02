@@ -1,5 +1,5 @@
 require_relative './board'
-require_relative './draughts.rb'
+require_relative './draughts'
 
 obj = Draughts.new
 obj.start_game

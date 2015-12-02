@@ -1,36 +1,15 @@
 require 'matrix'
-
-class Matrix
-  def []=(i, j, x)
-    @rows[i][j] = x
-  end
-end
-
-class String
-  def step(c, delta=1)
-    if c.ord + delta > 122 then
-      return [c.ord + delta - 26].pack 'U'
-    elsif c.ord + delta < 97 then
-      return [c.ord + delta + 26].pack 'U'
-    else
-      return [c.ord + delta].pack 'U'
-    end
-  end
-
-  def increment(c)
-    c %= 26
-    step self, c
-  end
-
-  def decrement(c)
-    c %= 26
-    step self, -c
-  end
-end
+require './class_extenders'
 
 class Board
   attr_reader :cell_pairs
-  $cell_codes = Matrix[
+  MOVES = {
+    'nw' => [-1, 0],
+    'ne' => [-1, +1],
+    'sw' => [+1, -1],
+    'se' => [+1, 0]
+  }
+  CELL_CODES = Matrix[
     [0,0,0,0,0,1,3,3,3,2],
      [0,0,0,0,5,7,7,7,7,2],
       [0,0,0,5,7,7,7,7,7,2],
@@ -50,14 +29,14 @@ class Board
     indentation = 0
     ret = ''
 
-    $cell_codes.to_a.map.with_index do |m, i|
+    CELL_CODES.to_a.map.with_index do |m, i|
       if i != 10 then
         ret += seq[counter].to_s + ' ' * indentation 
         m.each_with_index do |n, j| 
           n == 7 ? ret += ("#{positions[i,j]} ") : ret += ('  ')  # piece occupying the cell
           [4,5,6,7].include?(n) ? ret += ('| ') : ret += ('  ') 
         end
-        ret += "\n" + ' ' * indentation unless i == $cell_codes.to_a.map.size-1
+        ret += "\n" + ' ' * indentation unless i == CELL_CODES.to_a.map.size-1
         m.each_with_index do |n|
           [2,3,6,7].include?(n) ? ret += ('\\ ') : ret += ('  ') 
           [1,3,5,7].include?(n) ? ret += ('/ ') : ret += ('  ') 
@@ -76,7 +55,7 @@ class Board
     start_letter = 'a'
     increment = 0
     checker = 0
-    $cell_codes.each_with_index do |element, row, col|
+    CELL_CODES.each_with_index do |element, row, col|
       if row <= 5
         if checker != row then # I get here everytime it goes to another row
           increment = -row + 5
