@@ -60,7 +60,7 @@ class Draughts
   end
 
   def make_move positions,moves
-
+ 
   end
 
   def legal_move? piece, direction
