@@ -22,8 +22,6 @@ class Draughts
     @black_pieces_left = 12
     @white_pieces_left = 12
     @whose_turn = $white
-
-    puts legal_move?('3c', 'se')
   end
 
   def legal_move? piece, direction
