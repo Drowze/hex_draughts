@@ -1,5 +1,4 @@
 require 'matrix'
-require './class_extenders'
 
 class Board
   attr_reader :cell_pairs

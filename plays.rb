@@ -17,6 +17,7 @@ class Plays < Array
 
     @directions.each do |direction|
       yield [actual_position, direction]
+      raise 'invalid direction' unless Board::MOVES[direction]
       actual_xy = actual_xy.zip(Board::MOVES[direction]).map {|v| v.compact.reduce(:+) } # magic to "sum" the two arrays
       actual_position = hash["#{actual_xy[0].to_s} #{actual_xy[1].to_s}"]
     end
