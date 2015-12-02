@@ -1,19 +1,8 @@
-require_relative './board.rb'
+require_relative './board'
+require_relative './draughts.rb'
 
-positions = Matrix[
-  [' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
-   [' ',' ',' ',' ',' ','o','o','o','o',' '],
-    [' ',' ',' ',' ','o','o',' ', 'o','o',' '],
-     [' ',' ',' ', 'o',' ', 'o','o',' ', 'o',' '],
-      [' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
-       [' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
-        [' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
-         [' ','x',' ','x','x','x',' ',' ',' ',' '],
-          [' ','x','x',' ','x','x',' ',' ',' ',' '],
-           [' ','x','x','x','x',' ',' ',' ',' ',' ']
-]
+obj = Draughts.new
+obj.print_board
 
-
-
-obj = Board.new(positions)
-puts obj.board
+hash = Board.prepare_pairs
+puts( hash.map{ |k,v| "#{k} => #{v}" }.sort )
