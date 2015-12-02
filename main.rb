@@ -2,7 +2,7 @@ require_relative './board'
 require_relative './draughts.rb'
 
 obj = Draughts.new
-obj.print_board
+obj.start_game
 
 # hash = Board.prepare_pairs
 # puts( hash.map{ |k,v| "#{k} => #{v}" }.sort )
