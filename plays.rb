@@ -12,8 +12,7 @@ class Plays < Array
     hash = Board.prepare_pairs
     actual_position = @initial_position
 
-    actual_xy = hash.key(@initial_position)
-    actual_xy = actual_xy.scanf('%d%d')
+    actual_xy = hash.key(@initial_position).scanf('%d%d')
 
     @directions.each do |direction|
       yield [actual_position, direction]

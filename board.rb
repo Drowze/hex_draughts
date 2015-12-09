@@ -1,4 +1,6 @@
+require_relative './class_extenders'
 require 'matrix'
+require 'scanf'
 
 class Board
   attr_reader :cell_pairs
@@ -79,12 +81,30 @@ class Board
   end
 
   def self.calc_destination(x, y, dir)
-    board_pairs = Board.prepare_pairs
-    return nil if MOVES[dir].nil?
+    fail unless valid_direction?(dir)
+
+    board_pairs = prepare_pairs
     ret_x = x + MOVES[dir][0]
     ret_y = y + MOVES[dir][1]
     ret = [ret_x, ret_y]
-    return nil unless board_pairs["#{ret_x} #{ret_y}"]
+    return nil unless board_pairs["#{ret_x} #{ret_y}"] # check if out-of-bounds
     ret
+  end
+
+  def self.valid_direction?(dir)
+    !MOVES[dir].nil?
+  end
+
+  def self.cell_exists?(cell)
+    !prepare_pairs.key(cell).nil?
+  end
+
+  def self.cell_to_coordinates(cell)
+    prepare_pairs.key(cell).scanf('%d%d')
+  end
+
+  def self.coordinates_to_cell(arr)
+    str = arr[0].to_s + ' ' + arr[1].to_s
+    prepare_pairs[str]
   end
 end
