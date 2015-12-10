@@ -16,6 +16,7 @@
 
 require 'scanf'
 require 'matrix'
+require 'colorize'
 require_relative './class_extenders'
 
 require_relative './board_modifiers'
@@ -48,15 +49,17 @@ class Draughts
         ['E', 'x', 'x', 'x', 'x', 'E', 'E', 'E', 'E', 'E'],
         ['E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E']
     ]
-    # @positions_aux
     @board_pairs = Board.prepare_pairs
     @whose_turn = WHITE
   end
 
   def start_game
-    print_board(@positions)
-    ask_player @whose_turn
-    print_board(@positions_aux)
+    loop do
+      print_board(@positions)
+      ask_player @whose_turn
+      break if game_finished?(@pieces_left)
+      @whose_turn = advance_turn(@whose_turn)
+    end
   end
 
   def ask_player(color)
@@ -91,8 +94,17 @@ class Draughts
     print Board.prepare_board(positions)
   end
 
-  def game_finished?
-    @pieces_left['black'] == 0 || @pieces_left['white'] == 0
+  def game_finished?(pieces_left)
+    pieces_left['black'] <= 0 || pieces_left['white'] <= 0
+  end
+
+  def advance_turn(whose_turn)
+    whose_turn += 1
+    whose_turn %= 2
+  end
+
+  def debugger
+    $stderr.puts "#{@whose_turn}".red
   end
 end
 

@@ -1,7 +1,6 @@
 module BoardModifiers
   # make_move method expects that everything was checked beforehand
   def make_move(positions, cell, direction) # Returns the modified board
-
     origin = Board.cell_to_coordinates(cell)
     destiny = Board.calc_destination(Board.cell_to_coordinates(cell), direction)
 
@@ -46,11 +45,11 @@ module BoardModifiers
       fail InvalidTurn
     end
   end
-
-  def respective_arrow(player, dir)
-    "\u2196"
-    "\u2197"
-    "\u2199"
-    "\u2198"
-  end
 end
+
+# def respective_arrow(player, dir)
+  #   "\u2196"
+  #   "\u2197"
+  #   "\u2199"
+  #   "\u2198"
+  # end

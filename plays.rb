@@ -29,9 +29,6 @@ class Plays < Array
   def try_and_execute(positions, whose_turn, pieces_left)
     return false unless Board.cell_exists?(@initial_position)
 
-    arr = %w(x X) if whose_turn == 0
-    arr = %w(o O) if whose_turn == 1
-
     actual_cell = @initial_position
     actual_xy = Board.cell_to_coordinates(actual_cell)
     msg_stack = []
@@ -52,7 +49,7 @@ class Plays < Array
       Board.prepare_board(positions)
     end
     puts msg_stack
-    [positions, whose_turn]
+    [positions, pieces_left]
   end
 
   def contains_huffing?
