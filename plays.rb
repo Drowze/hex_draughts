@@ -1,8 +1,8 @@
 require_relative './board'
-require_relative './movements'
+require_relative './board_modifiers'
 require_relative './board_questions'
 
-include Movements
+include BoardModifiers
 include BoardQuestions
 
 class Plays < Array

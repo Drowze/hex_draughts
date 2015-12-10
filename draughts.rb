@@ -8,17 +8,23 @@
 # cell_dir => cell[0] = cell, cell_dir[1] = dir
 #
 
+#
+# TO-DO: Tipo, quando ele ta checando a movimentacao, retorna um falso se nao
+# for possivel. Se for possivel continua e tals. No final, vc verifica se eh
+# falso ou nao :)
+#
+
 require 'scanf'
 require 'matrix'
 require_relative './class_extenders'
 
-require_relative './movements'
+require_relative './board_modifiers'
 require_relative './board_questions'
 
 require_relative './board'
 require_relative './plays'
 
-include Movements
+include BoardModifiers
 include BoardQuestions
 
 class Draughts
@@ -94,13 +100,13 @@ class Draughts
       positions = simple_move(positions, origin, cell_dir[1])
     else
       positions = make_capture(positions, origin, cell_dir[1])
-      destiny = Board.calc_destination(destiny, cell_dir[1])
+      destiny = Board.calc_destination(destiny, cell_dir[1]) # increasing destiny
       @whose_turn == WHITE ? @black_pieces_left -= 1 : @white_pieces_left -= 1
       puts ''
     end
 
     $stderr.print("Moved to #{Board.coordinates_to_cell(destiny)}\n")
-    return positions
+    positions
   end
 
   def print_board

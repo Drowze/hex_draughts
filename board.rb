@@ -81,7 +81,7 @@ class Board
   end
 
   def self.calc_destination(arr, dir)
-    fail ArgumentError, "Invalid direction", caller unless valid_direction?(dir)
+    fail ArgumentError, 'Invalid direction', caller unless valid_direction?(dir)
 
     board_pairs = prepare_pairs
     ret_x = arr[0] + MOVES[dir][0]

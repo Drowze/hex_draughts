@@ -1,4 +1,4 @@
-module Movements
+module BoardModifiers
   def simple_move(positions, origin, direction)
     destiny = Board.calc_destination(origin, direction)
     positions[destiny[0], destiny[1]] = positions[origin[0], origin[1]]
@@ -18,11 +18,11 @@ module Movements
   def remove_enemy_piece
     if @whose_turn == 0 # 0: White code
       @black_pieces_left -= 1
-      ret = 'Black piece removed'
+      'Black piece removed'
     elsif @whose_turn == 1 # 1: Black code
       @white_pieces_left -= 1
-      ret = 'White piece removed'
-    else 
+      'White piece removed'
+    else
       fail InvalidTurn
     end
   end
