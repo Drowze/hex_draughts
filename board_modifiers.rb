@@ -13,6 +13,8 @@ module BoardModifiers
       it_was = 'capture'
     end
 
+    positions = evolve_to_king(positions, destiny) if got_the_flag?(positions, Board.coordinates_to_cell(destiny))
+
     msg = "Command: #{direction} | From #{cell} to #{Board.coordinates_to_cell(destiny)}\n"
     [it_was, positions, destiny, msg]
   end
@@ -25,7 +27,6 @@ module BoardModifiers
   end
 
   def make_capture(positions, origin, direction)
-    # $stderr.puts "#{Board.prepare_board(positions)}"
     destiny = Board.calc_destination(origin, direction) # destiny is enemy's cell
     positions[destiny[0], destiny[1]] = ' ' # piece in enemy's cell removed
     destiny = Board.calc_destination(destiny, direction) # destiny updated to next cell
@@ -44,6 +45,11 @@ module BoardModifiers
     else
       fail InvalidTurn
     end
+  end
+
+  def evolve_to_king(positions, xy) # return a positions matrix modified
+    positions[xy[0], xy[1]].upcase!
+    positions
   end
 end
 

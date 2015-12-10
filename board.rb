@@ -104,6 +104,10 @@ class Board
     !prepare_pairs.key(cell).nil?
   end
 
+  def self.coordinates_exists?(xy)
+    !prepare_pairs[xy].nil?
+  end
+
   def self.cell_to_coordinates(cell)
     prepare_pairs.key(cell)
   end

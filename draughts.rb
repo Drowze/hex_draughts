@@ -27,13 +27,13 @@ class Draughts
   BLACK = 1
   def initialize
     @pieces_left = {
-      'white' => 2,
-      'black' => 2
+      'white' => 12,
+      'black' => 12
     }
     @positions = Matrix[
         ['E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E'],
-        ['E', 'E', 'E', 'E', 'E', 'o', 'o', 'o', 'o', 'E'],
-        ['E', 'E', 'E', 'E', 'o', 'o', ' ', 'o', 'o', 'E'],
+        ['E', 'E', 'E', 'E', 'E', 'o', 'o', ' ', 'o', 'E'],
+        ['E', 'E', 'E', 'E', 'o', 'o', 'x', 'o', 'o', 'E'],
         ['E', 'E', 'E', 'o', ' ', 'o', 'o', ' ', 'o', 'E'],
         ['E', 'E', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'E'],
         ['E', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'E'],
@@ -56,7 +56,7 @@ class Draughts
     end
     puts "Player white won the game!" if @whose_turn == WHITE
     puts "Player black won the game!" if @whose_turn == BLACK
-    return @whose_turn
+    @whose_turn
   end
 
   def ask_player(color)
@@ -73,13 +73,10 @@ class Draughts
 
       all_moves = Plays.new(gets.chomp.split)
 
-      if Board.cell_exists?(all_moves.initial_position) && !all_moves.directions.empty?
-        @positions_aux, pieces_left = all_moves.try_and_execute(@positions_aux, @whose_turn, @pieces_left)
-        # implementar o huffling ou o cacete que for
-        invalid_move = true if @positions_aux == false
-      else
-        invalid_move = true
-      end
+      @positions_aux, pieces_left = all_moves.try_and_execute(@positions_aux, @whose_turn, @pieces_left)
+      # implementar o huffling ou o cacete que for
+      invalid_move = true if @positions_aux == false
+
       break unless invalid_move == true
       puts 'Invalid move attempted'
     end

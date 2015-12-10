@@ -28,6 +28,7 @@ class Plays < Array
 
   def try_and_execute(positions, whose_turn, pieces_left)
     return false unless Board.cell_exists?(@initial_position)
+    return false if directions.empty?
 
     actual_cell = @initial_position
     actual_xy = Board.cell_to_coordinates(actual_cell)
