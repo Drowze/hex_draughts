@@ -8,12 +8,6 @@
 # cell_dir => cell[0] = cell, cell_dir[1] = dir
 #
 
-#
-# TO-DO: Tipo, quando ele ta checando a movimentacao, retorna um falso se nao
-# for possivel. Se for possivel continua e tals. No final, vc verifica se eh
-# falso ou nao :)
-#
-
 require 'scanf'
 require 'matrix'
 require 'colorize'
@@ -33,8 +27,8 @@ class Draughts
   BLACK = 1
   def initialize
     @pieces_left = {
-      'white' => 12,
-      'black' => 12
+      'white' => 2,
+      'black' => 2
     }
     @positions = Matrix[
         ['E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E'],
@@ -60,6 +54,9 @@ class Draughts
       break if game_finished?(@pieces_left)
       @whose_turn = advance_turn(@whose_turn)
     end
+    puts "Player white won the game!" if @whose_turn == WHITE
+    puts "Player black won the game!" if @whose_turn == BLACK
+    return @whose_turn
   end
 
   def ask_player(color)
@@ -100,7 +97,7 @@ class Draughts
 
   def advance_turn(whose_turn)
     whose_turn += 1
-    whose_turn %= 2
+    whose_turn % 2
   end
 
   def debugger

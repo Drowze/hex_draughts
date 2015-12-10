@@ -48,8 +48,8 @@ module BoardModifiers
 end
 
 # def respective_arrow(player, dir)
-  #   "\u2196"
-  #   "\u2197"
-  #   "\u2199"
-  #   "\u2198"
-  # end
+#   "\u2196"
+#   "\u2197"
+#   "\u2199"
+#   "\u2198"
+# end
