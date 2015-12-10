@@ -1,9 +1,25 @@
+# REFERENCE
+# color = WHITE or BLACK
+# xy = Array[x, y]
+# cell = String (e.g.: 7c)
+# dir = sw OR se OR nw OR ne
+#
+# xy_dir => xy_dir[0] = xy, xy_dir[1] = dir
+# cell_dir => cell[0] = cell, cell_dir[1] = dir
+#
+
 require 'scanf'
 require 'matrix'
 require_relative './class_extenders'
 
+require_relative './movements'
+require_relative './board_questions'
+
 require_relative './board'
 require_relative './plays'
+
+include Movements
+include BoardQuestions
 
 class Draughts
   WHITE = 0 ## lower side
@@ -32,6 +48,7 @@ class Draughts
   def start_game
     print_board
     ask_player @whose_turn
+    print_board
   end
 
   def ask_player(color)
@@ -50,8 +67,13 @@ class Draughts
       if Board.cell_exists?(all_moves.initial_position) && !all_moves.directions.empty?
         all_moves.each_move do |move| # move[0] = piece, move[1] = direction
           # implementar o huffling ou o cacete que for
-          invalid_move = true unless legal_move?(move[0], move[1])
-          make_move(@positions_aux, all_moves)
+          if legal_move?(move[0], move[1])
+            make_move(@positions_aux, move)
+            all_moves.shift
+          else
+            invalid_move = true
+            break
+          end
         end
       else
         invalid_move = true
@@ -61,37 +83,24 @@ class Draughts
     end
   end
 
-  def legal_move?(cell, direction)
-    return false unless Board.cell_exists?(cell)
-    return false unless Board.valid_direction?(direction)
+  # make_move method expects that everything was checked beforehand
+  def make_move(positions, cell_dir) # Returns the modified board
+    $stderr.print(">> Trying to move piece #{cell_dir[0]} to #{cell_dir[1]}... ")
 
-    xy = Board.cell_to_coordinates(cell)
-    dest = Board.calc_destination(xy[0], xy[1], direction) # destination
-    return false if dest.nil? # dest out-of-bounds
+    origin = Board.cell_to_coordinates(cell_dir[0])
+    destiny = Board.calc_destination(Board.cell_to_coordinates(cell_dir[0]), cell_dir[1])
 
-    return false if there_a_piece?(dest).is_a?(Integer) && !capture_valid?(dest, direction) # this also checks for friendly pieces
+    if there_a_piece?(destiny) == false
+      positions = simple_move(positions, origin, cell_dir[1])
+    else
+      positions = make_capture(positions, origin, cell_dir[1])
+      destiny = Board.calc_destination(destiny, cell_dir[1])
+      @whose_turn == WHITE ? @black_pieces_left -= 1 : @white_pieces_left -= 1
+      puts ''
+    end
 
-    STDERR.puts 'Legal move'
-    true
-  end
-
-  def make_move(positions, moves)
-  end
-
-  def there_a_piece?(xy) # Possible returns: BLACK, WHITE, -1
-    return false unless %w(x X o O).include?(@positions[xy[0], xy[1]]) # There is no piece
-    return WHITE if %w(x X).include?(@positions[xy[0], xy[1]])
-    return BLACK if %w(o O).include?(@positions[xy[0], xy[1]])
-  end
-
-  def capture_valid?(xy, dir)
-    enemy = %w(o O) if @whose_turn == WHITE
-    enemy = %w(x X) if @whose_turn == BLACK
-    inc_xy = Board.calc_destination(xy[0], xy[1], dir) # increased xy
-
-    return false unless enemy.include?(@positions[xy[0], xy[1]])
-    return false if there_a_piece?([inc_xy[0], inc_xy[1]]).is_a?(Integer)
-    true
+    $stderr.print("Moved to #{Board.coordinates_to_cell(destiny)}\n")
+    return positions
   end
 
   def print_board
@@ -100,5 +109,12 @@ class Draughts
 
   def game_finished?
     @black_pieces_left == 0 || @white_pieces_left == 0
+  end
+
+  ####          Below: make questions to your code
+  def there_a_piece?(xy) # Possible returns: BLACK, WHITE, -1
+    return false unless %w(x X o O).include?(@positions[xy[0], xy[1]]) # There is no piece
+    return WHITE if %w(x X).include?(@positions[xy[0], xy[1]])
+    return BLACK if %w(o O).include?(@positions[xy[0], xy[1]])
   end
 end

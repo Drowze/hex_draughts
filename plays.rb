@@ -1,4 +1,9 @@
 require_relative './board'
+require_relative './movements'
+require_relative './board_questions'
+
+include Movements
+include BoardQuestions
 
 class Plays < Array
   attr_reader :initial_position, :directions
@@ -9,33 +14,18 @@ class Plays < Array
   end
 
   def each_move
-    hash = Board.prepare_pairs
-    actual_position = @initial_position
+    actual_cell = @initial_position
 
-    actual_xy = hash.key(@initial_position).scanf('%d%d')
+    actual_xy = Board.cell_to_coordinates(actual_cell)
 
     @directions.each do |direction|
-      yield [actual_position, direction]
+      yield [actual_cell, direction]
       fail 'invalid direction' unless Board::MOVES[direction] # verify if directiin is valid
-      actual_xy = actual_xy.zip(Board::MOVES[direction]).map { |v| v.compact.reduce(:+) } # magic to "sum" the two arrays
-      actual_position = hash["#{actual_xy[0]} #{actual_xy[1]}"]
+      actual_xy = Board.calc_destination(actual_xy, direction)
+
+      actual_cell = Board.coordinates_to_cell(actual_xy)
     end
   end
-
-  # def each_capture(positions)
-  #   hash = Board.prepare_pairs
-  #   actual_position = @initial_position # position is the NUMBER-LETTER form
-
-  #   actual_xy = hash.key(@initial_position)
-  #   actual_xy = actual_xy.scanf("%d%d")
-
-  #   for i in 0..captures-1
-  #     yield [actual_position, @directions[i]]
-  #     raise 'invalid direction' unless Board::MOVES[direction] # verify if directiin is valid
-  #     actual_xy = Board.calc_destination(actual_xy, Board::MOVES[@directions[i]])
-  #     actual_position = hash["#{actual_xy[0].to_s} #{actual_xy[1].to_s}"]
-  #   end
-  # end
 
   def contains_huffing?
     @directions[0].to_i != 0

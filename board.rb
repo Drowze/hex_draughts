@@ -34,7 +34,7 @@ class Board
       if i != 10
         ret += seq[counter].to_s + ' ' * indentation
         m.each_with_index do |n, j|
-          n == 7 ? ret += ("#{positions[i, j]} ") : ret += ('  ') # piece occupying the cell
+          n == 7 ? ret += ("#{positions[i, j]} ") : ret += ('  ') # actiual piece
           [4, 5, 6, 7].include?(n) ? ret += ('| ') : ret += ('  ')
         end
         ret += "\n" + ' ' * indentation unless i == CELL_CODES.to_a.map.size - 1
@@ -63,7 +63,7 @@ class Board
           checker = row
         end
         if element == 7
-          @cell_pairs["#{row} #{col}"] = "#{row}#{start_letter.increment(increment)}"
+          @cell_pairs[[row, col]] = "#{row}#{start_letter.increment(increment)}"
           increment += 2
         end
       else
@@ -72,7 +72,7 @@ class Board
           checker = row
         end
         if element == 7
-          @cell_pairs["#{row} #{col}"] = "#{row}#{start_letter.increment(increment)}"
+          @cell_pairs[[row, col]] = "#{row}#{start_letter.increment(increment)}"
           increment += 2
         end
       end
@@ -80,14 +80,14 @@ class Board
     @cell_pairs
   end
 
-  def self.calc_destination(x, y, dir)
-    fail unless valid_direction?(dir)
+  def self.calc_destination(arr, dir)
+    fail ArgumentError, "Invalid direction", caller unless valid_direction?(dir)
 
     board_pairs = prepare_pairs
-    ret_x = x + MOVES[dir][0]
-    ret_y = y + MOVES[dir][1]
+    ret_x = arr[0] + MOVES[dir][0]
+    ret_y = arr[1] + MOVES[dir][1]
     ret = [ret_x, ret_y]
-    return nil unless board_pairs["#{ret_x} #{ret_y}"] # check if out-of-bounds
+    return nil unless board_pairs[ret] # check if out-of-bounds
     ret
   end
 
@@ -100,11 +100,13 @@ class Board
   end
 
   def self.cell_to_coordinates(cell)
-    prepare_pairs.key(cell).scanf('%d%d')
+    prepare_pairs.key(cell)
   end
 
   def self.coordinates_to_cell(arr)
-    str = arr[0].to_s + ' ' + arr[1].to_s
-    prepare_pairs[str]
+    prepare_pairs[arr]
   end
 end
+
+# Print the keys for reference:
+# puts(Board.prepare_pairs.map { |k, v| "#{k} => #{v}" }.sort)
