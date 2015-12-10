@@ -83,11 +83,16 @@ class Board
   def self.calc_destination(arr, dir)
     fail ArgumentError, 'Invalid direction', caller unless valid_direction?(dir)
 
-    board_pairs = prepare_pairs
-    ret_x = arr[0] + MOVES[dir][0]
-    ret_y = arr[1] + MOVES[dir][1]
-    ret = [ret_x, ret_y]
-    return nil unless board_pairs[ret] # check if out-of-bounds
+    ret = [arr[0] + MOVES[dir][0], arr[1] + MOVES[dir][1]]
+    return nil unless prepare_pairs[ret] # check if out-of-bounds
+    ret
+  end
+
+  def self.sub_destination(arr, dir)
+    fail ArgumentError, 'Invalid direction', caller unless valid_direction?(dir)
+
+    ret = [arr[0] - MOVES[dir][0], arr[1] - MOVES[dir][1]]
+    return nil unless prepare_pairs[ret] # check if out-of-bounds
     ret
   end
 
