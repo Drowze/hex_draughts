@@ -1,6 +1,7 @@
 require_relative './class_extenders'
 require 'matrix'
 require 'scanf'
+require 'colorize'
 
 class Board
   attr_reader :cell_pairs

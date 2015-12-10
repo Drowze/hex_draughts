@@ -3,7 +3,7 @@ module BoardModifiers
   def make_move(positions, cell, direction) # Returns the modified board
     origin = Board.cell_to_coordinates(cell)
     destiny = Board.calc_destination(Board.cell_to_coordinates(cell), direction)
-
+    
     if there_a_piece?(positions, destiny) == false
       positions = simple_move(positions, origin, direction)
       it_was = 'move'
@@ -12,6 +12,20 @@ module BoardModifiers
       destiny = Board.calc_destination(destiny, direction) # increasing destiny
       it_was = 'capture'
     end
+
+    positions = evolve_to_king(positions, destiny) if got_the_flag?(positions, Board.coordinates_to_cell(destiny))
+
+    msg = "Command: #{direction} | From #{cell} to #{Board.coordinates_to_cell(destiny)}\n"
+    [it_was, positions, destiny, msg]
+  end
+
+  def subsequent_capture(positions, cell, direction) # Returns the modified board
+    origin = Board.cell_to_coordinates(cell)
+    destiny = Board.calc_destination(Board.cell_to_coordinates(cell), direction)
+
+    positions = make_capture(positions, origin, direction)
+    destiny = Board.calc_destination(destiny, direction)
+    it_was = 'capture'
 
     positions = evolve_to_king(positions, destiny) if got_the_flag?(positions, Board.coordinates_to_cell(destiny))
 
